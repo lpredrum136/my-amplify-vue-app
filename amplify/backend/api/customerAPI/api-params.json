@@ -1,0 +1,42 @@
+{
+    "paths": [
+        {
+            "name": "/customers",
+            "lambdaFunction": "customerLambda",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            },
+            "policyResourceName": "/customers"
+        }
+    ],
+    "resourceName": "customerAPI",
+    "apiName": "customerAPI",
+    "functionArns": [
+        {
+            "lambdaFunction": "customerLambda"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "amplify-myamplifyapp-dev-122613-authRole",
+        "unAuthRoleName": "amplify-myamplifyapp-dev-122613-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "customerLambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
