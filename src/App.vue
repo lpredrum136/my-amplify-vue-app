@@ -13,10 +13,10 @@
       <input type="password" name="password" id="password" v-model="password" />
       <input type="submit" value="Login" />
     </form>
-    <button @click="logout">Sign out</button>
+    <button @click="logout">Sign outttt</button>
 
     <!--GET DATA VIA API-->
-    <button @click="getCustomers">Get all customers</button>
+    <button @click="getCustomers">Get all customerssss</button>
   </div>
 </template>
 
