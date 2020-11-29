@@ -58,6 +58,7 @@ connection.connect(function(err) {
 app.get('/customers', function(req, res) {
   console.log(process.env.ENV);
   console.log(process.env.AUTH_MYAMPLIFYAPP424A68A1_USERPOOLID);
+  console.log('test backend change');
 
   // Add your code here
   connection.query('SELECT * FROM Customers', function(err, result, fields) {
