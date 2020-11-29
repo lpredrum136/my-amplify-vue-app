@@ -48,7 +48,7 @@ connection.connect(function(err) {
     return;
   }
 
-  console.log('Connected to database.');
+  console.log('Connected to database.', process.env.RDS_HOSTNAME);
 });
 
 /**********************
@@ -56,9 +56,14 @@ connection.connect(function(err) {
  **********************/
 
 app.get('/customers', function(req, res) {
+  console.log(process.env.ENV);
+  console.log(process.env.AUTH_MYAMPLIFYAPP424A68A1_USERPOOLID);
+
   // Add your code here
   connection.query('SELECT * FROM Customers', function(err, result, fields) {
-    if (err) throw err;
+    if (err) {
+      throw err;
+    }
     console.log(process.env.ENV);
 
     res.json({ success: result, url: req.url, host: process.env.RDS_HOSTNAME });
