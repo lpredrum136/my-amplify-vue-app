@@ -1,0 +1,192 @@
+1. Prerequisite:
+Install aws cli
+aws configure
+Input your user access key id and access key secret
+
+2. npm install -g @aws-amplify/cli
+
+3. Run amplify configure
+Will sign into AWS Amplify Console:
+Back into console
+ap-southeast-2
+user name: henry_nguyen, existing one is fine
+Dien access key id va secret vao
+Se update hoac tao AWS Profile moi, co the kiem tra bang cach google check aws profile
+
+4. amplify init
+dev
+VSCode
+js
+vue
+src
+dist
+npm run build
+npm run serve
+Choose profile
+When done, run amplify console to see an environment dev is set up
+
+5. Install Amplify libraries
+npm install aws-amplify @aws-amplify/ui-vue
+Note: react has another, ui-react or something
+
+    amplify init, to setup a new environment. Eg: dev, test, dist.
+
+6. Setup frontend to interact with backend
+Open src/main.js and add the following code below the last import:
+import Amplify from 'aws-amplify';
+import '@aws-amplify/ui-vue';
+import aws_exports from './aws-exports';
+
+Amplify.configure(aws_exports);
+
+7. Add Auth
+amplify add auth
+Default config 
+username
+No I am done 
+amplify push
+To quickly check your newly created Cognito User Pool you can run
+amplify status
+or go to AWS Cognito
+
+8. Add API 
+amplify add api
+customerAPI
+/customers
+customerLambda
+NodeJS
+Serverless ExpressJS function
+y to configure advanced settings
+- Access other resources? Neu da tao auth roi thi yes roi chon auth. Khi do lambda co the thay doi auth
+- select all operations neu muon authenticated user thuc hien het:
+    + You can access the following resource attributes as environment variables from your Lambda function
+        AUTH_MYAMPLIFYAPP424A68A1_USERPOOLID
+        ENV
+        REGION
+    + bang cach process.env.SOMETHING
+- Co the edit duoc function lambda luon:
+E:\WebDev\AWS Amplify\my-amplify-app\amplify\backend\function\customerLambda\src\app.js
+"amplify function build" builds all of your functions currently in the project
+"amplify mock function <functionName>" runs your function locally
+"amplify push" builds all of your local backend resources and provisions them in the cloud
+"amplify publish" builds all of your local backend and front-end resources (if you added hosting category) and provisions them in the cloud
+
+- Restrict API access: yes 
+- Who? authenticated only
+- chon het CRUD
+
+- amplify push => REST API endpoint: https://4h97xznhm6.execute-api.ap-southeast-2.amazonaws.com/dev
+- Co the vao api gateway de kiem tra va test, nhung cach nay lau vl 
+
+- Test kieu khac, vao my-amplify-app\amplify\backend\function\customerLambda\src\event.json, doi thanh 
+{
+  "httpMethod": "GET",
+  "path": "/customers",
+  "queryStringParameters": {
+    "limit": "10"
+  }
+}
+
+roi run amplify mock function customerLambda (neu k biet ten function thi chay amplify status)
+
+9. Connect vao DB:
+cd vao my-amplify-app/amplify/backend/function/customerLambda/src
+npm i mysql
+// CONNECT DB
+var mysql = require('mysql');
+
+var connection = mysql.createConnection({
+  host: 'my-rds-host.rds.amazonaws.com',
+  user: 'my username',
+  password: 'k...6',
+  port: 3306,
+  database: 'my-db'
+});
+
+connection.connect(function(err) {
+  if (err) {
+    console.error('Database connection failed: ' + err.stack);
+    return;
+  }
+
+// Doan nay dua vao function nao cung duoc
+  connection.query('SELECT * FROM Customers', function(err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+  });
+  console.log('Connected to database.');
+});
+
+Co the chui vao day va chay node app.js nhung dang tim cach khac ngon hon 
+
+De secure thi https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html
+Va https://github.com/aws-amplify/amplify-cli/issues/684
+https://github.com/aws-amplify/amplify-cli/issues/4347
+
+Luc nay phai add env vars vao console cua Lambda, tam thoi chua tim ra cach add vao local roi push len lambda
+Ke ca add vars vao console cua Lambda thi cung chi co the chay khi da push. Chu chay locally k lay duoc env vars tu lambda
+Hoac check trong code cho cai env dev hay prod de hardcode hoac lay o lambda
+
+Hoac xem o day: https://docs.aws.amazon.com/amplify/latest/userguide/environment-variables.html
+De add env vars vao amplify khi build
+
+Vao tk cua Zepiro https://docs.aws.amazon.com/lambda/latest/dg/configuration-database.html
+
+10. SIGN IN & SIGN OUT:
+Lam nhu App.vue
+
+11. CHECK AUTH TAI CAC ROUTE 
+Lam nhu App.vue
+https://stackoverflow.com/questions/48733000/aws-amplify-how-to-check-if-user-is-logged-in
+https://gerard-sans.medium.com/build-your-first-full-stack-serverless-app-with-vue-and-aws-amplify-9ed7ef9e9926
+https://medium.com/@dabit3/how-to-build-serverless-vue-applications-with-aws-amplify-67d16c79e9d6
+
+12. GET DATA VIA API
+Nhu App.vue
+Neu luc thiet lap API bat phai co auth thi phai dang nhap moi goi duoc api
+
+
+13. DEPLOY
+amplify add hosting 
+manual to manually deploy 
+continuous deployment to connect to a repo for CI/CD
+https://docs.amplify.aws/start/getting-started/hosting/q/integration/vue
+see amplify.yml in WebDev folder to know the commands when deploy
+
+Den cuoi se co 
+Amplify hosting urls:
+┌──────────────┬──────────────────────────────────────────────┐
+│ FrontEnd Env │ Domain                                       │
+├──────────────┼──────────────────────────────────────────────┤
+│ master       │ https://master.d2kds12it9no9g.amplifyapp.com │
+
+Neu CI/CD thi chi can git push la se tu build cai moi
+
+14. COLLABORATION
+https://docs.amplify.aws/cli/teams/overview
+https://docs.aws.amazon.com/amplify/latest/userguide/multi-environments.html
+
+15. MOT VAI CHECKLIST 
+Learn how to get the most out of Amplify Console
+1 of 5 steps complete
+1. First successful build of your myamplifyapp app
+Nailed it! Your app's first build was successful.
+2. Add a custom domain with a free SSL certificate
+You can connect a custom domain purchased through domain registrars (for example, Amazon Route 53, GoDaddy, and Google Domains) to your app.
+3. Set up a test version of your site by connecting a feature branch
+The Amplify Console leverages Git branches to create new deployments every time a developer connects a new branch in their repository.
+4. Password-protect your site
+Working on unreleased features? Password protect feature branches that are not ready to be accessed publicly.
+5. Enable pull request previews
+Previews offer a way to view changes from pull requests before they are merged to the target branch.
+
+=====================================
+"amplify add <category>" will allow you to add features like user login or a backend API
+
+    amplify push, to build and provision local backend resources to the cloud.
+
+"amplify console" to open the Amplify Console and view your project status
+
+    amplify status, to list local resources and their current status (if it's locally configured or deployed).
+
+"amplify publish" will build all your local backend and frontend resources (if you have hosting category added) and provision it in the cloud
