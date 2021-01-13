@@ -25,6 +25,8 @@ npm run serve
 Choose profile
 When done, run amplify console to see an environment dev is set up
 
+DOAN NAY CO THE NHAY SANG BUOC 8 LUON 
+
 5. Install Amplify libraries
 npm install aws-amplify @aws-amplify/ui-vue
 Note: react has another, ui-react or something
@@ -51,6 +53,8 @@ or go to AWS Cognito
 
 8. Add API 
 amplify add api
+
+8.1 REST
 customerAPI
 /customers
 customerLambda
@@ -89,6 +93,28 @@ E:\WebDev\AWS Amplify\my-amplify-app\amplify\backend\function\customerLambda\src
 
 roi run amplify mock function customerLambda (neu k biet ten function thi chay amplify status)
 
+8.2. GRAPHQL WITH DYNAMODB
+amplify add api 
+chon GraphQL lam theo huong dan
+
+amplify push
+amplify status:
+  GraphQL endpoint: https://gx4437q6znaw3o6khxwijamyam.appsync-api.ap-southeast-2.amazonaws.com/graphql
+  GraphQL API KEY: somethingsomething
+
+amplify console api: go to appsync to test api 
+or run
+amplify mock api: open GraphiQL
+
+amplify codegen neu update API tu AppSync
+neu amplify codegen k duoc (kiem tra queries) thi copy schema tu AppSync console ve schema.graphql
+hoac k tot nhat la sua trong code thoi dung dong gi toi AppSync console
+
+amplify serve 
+
+8.3. GRAPHQL WITH RDS
+NEU MUON DUNG GraphQL and RDS
+
 9. Connect vao DB:
 cd vao my-amplify-app/amplify/backend/function/customerLambda/src
 npm i mysql
@@ -96,11 +122,11 @@ npm i mysql
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
-  host: 'my-rds-host.rds.amazonaws.com',
-  user: 'my username',
-  password: 'k...6',
+  host: 'database-1.cahq8urtakso.ap-southeast-2.rds.amazonaws.com',
+  user: 'admin',
+  password: 'mypassword',
   port: 3306,
-  database: 'my-db'
+  database: 'Zepiro_Test'
 });
 
 connection.connect(function(err) {
